@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "@tiptap/core": "^2.27.2",
+    "classnames": "^2.5.1",
+    "lucide-react": "^0.577.0"
+  }
+}

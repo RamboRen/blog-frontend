@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>暗色模式测试</title>
+    <style>
+        /* 日间模式（默认） */
+        :root {
+            --background: #ffffff;
+            --foreground: #171717;
+        }
+
+        /* 暗色模式 - 仅在添加 .dark 类时生效 */
+        .dark {
+            --background: #111827;
+            --foreground: #f9fafb;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--foreground);
+            font-family: Arial, Helvetica, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            color: #171717;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .card {
+            background: #1f2937;
+            color: #f9fafb;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #0ea5e9;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background: #0284c7;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f3f4f6;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .dark .status {
+            background: #374151;
+        }
+    </style>
+</head>
+<body>
+    <h1>暗色模式测试页面</h1>
+    
+    <button onclick="toggleDarkMode()">切换暗色模式</button>
+    
+    <div class="card">
+        <h2>测试卡片</h2>
+        <p>这是一个测试卡片，用于验证暗色模式是否正常工作。</p>
+        <p>当前背景色：<span id="bgColor"></span></p>
+        <p>当前文字色：<span id="textColor"></span></p>
+    </div>
+
+    <div class="status">
+        <div>HTML class: <span id="htmlClass"></span></div>
+        <div>LocalStorage theme: <span id="storageTheme"></span></div>
+        <div>Background: <span id="computedBg"></span></div>
+        <div>Color: <span id="computedColor"></span></div>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+            
+            if (isDark) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+            
+            updateStatus();
+        }
+
+        function updateStatus() {
+            const html = document.documentElement;
+            const bgColor = getComputedStyle(document.body).backgroundColor;
+            const textColor = getComputedStyle(document.body).color;
+            
+            document.getElementById('htmlClass').textContent = html.className || '(none)';
+            document.getElementById('storageTheme').textContent = localStorage.getItem('theme') || '(none)';
+            document.getElementById('computedBg').textContent = bgColor;
+            document.getElementById('computedColor').textContent = textColor;
+            
+            // 更新卡片中的颜色显示
+            document.getElementById('bgColor').textContent = bgColor;
+            document.getElementById('textColor').textContent = textColor;
+        }
+
+        // 初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                if (savedTheme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+            updateStatus();
+            
+            // 每秒更新一次状态
+            setInterval(updateStatus, 1000);
+        });
+    </script>
+</body>
+</html>
